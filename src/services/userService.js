@@ -4,7 +4,7 @@ const salt = bcrypt.genSaltSync(10);
 let hashUserPassword = (password) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let hashPassword = bcrypt.hashSync(password, salt);
+            let hashPassword = await bcrypt.hashSync(password, salt);
             resolve(hashPassword);
         } catch (e) {
             reject(e);
@@ -21,7 +21,7 @@ let handleUserLogin = (email, password) => {
                 //check user thêm lần nữa để tránh việc tài khoản bị xóa cùng thời điểm
                 let user = await db.User.findOne({
                     where: { email: email },
-                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName '],
+                    attributes: ['id', 'email', 'roleId', 'password', 'firstName', 'lastName'],
                     raw: true
                 })
                 if (user) {
@@ -125,7 +125,7 @@ let createNewUser = (data) => {
                 })
             }
         } catch (e) {
-            reject(e)
+            reject(e);
         }
     })
 }
